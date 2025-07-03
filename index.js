@@ -40,7 +40,9 @@ function getObjectById(id){
 }
 
 function getRandomId(){
-    return Math.floor(Math.random() * 1000)
+    const id = Math.floor(Math.random() * 1000)
+    
+    return id.toString()
 }
 
 function validateContact(obj){
@@ -79,7 +81,7 @@ app.get('/api/persons/:id', (req, res) => {
     let person = getObjectById(id)
 
     if(person == null){
-        res.status(404).send(`<p>Virhe! Kontaktia ID numerolla ${id} ei löytynyt.</p>`)
+        res.status(404).send(`<p>Error! Contact with ID ${id}, was not found.</p>`)
     }else {
         res.status(200).json(person)
     }
@@ -97,15 +99,21 @@ app.post('/api/persons/', (req, res) => {
         res.status(200).json(persons)
     }
     else {
-        res.status(400).send('Virhe! Nimi on jo luettelossa tai lisättäviä tietoja puuttuu.')
+        res.status(400).send('Error! Contact already exists!')
     }
 })
 
 app.delete('/api/persons/:id', (req, res) => {
     let id = req.params.id
+    
     persons = persons.filter(person => person.id !== id)
 
-    res.status(204).json(persons).end()
+    // Timeout set for a delayed response, so that list filter is finished before sending response.
+    setTimeout(() => {
+        console.log('Removing contact..')
+    }, 500)
+
+    res.status(200).json(persons)
 })
 
 app.get('/info', (req, res) => {
